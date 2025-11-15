@@ -1,9 +1,16 @@
 package ua.opnu;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+
 
 public class Task {
     public static void main(String[] args) {
@@ -14,6 +21,7 @@ public class Task {
         for (int i = list.size() - 2; i >= 0; i -= 2) {
             String a = list.get(i);
             String b = list.get(i + 1);
+
             if (a.length() <= b.length()) {
                 list.remove(i);
             } else {
@@ -77,32 +85,47 @@ public class Task {
     }
 
     public void reorder(Queue<Integer> queue) {
-        java.util.ArrayDeque<Integer> negatives  = new java.util.ArrayDeque<>();
-        int size = queue.size();
+        List<Integer> list = new ArrayList<>();
+        while (!queue.isEmpty()) list.add(queue.remove());
 
-        for (int i = 0; i < size; i++) {
-            int x = queue.remove();
-            if (x < 0) negatives.push(x);
-            else queue.add(x);
+        List<Integer> positives = new ArrayList<>();
+        List<Integer> negatives = new ArrayList<>();
+
+        for (int x : list) {
+            if (x < 0) negatives.add(x);
+            else positives.add(x);
         }
 
-        while (!negatives.isEmpty()) {
-            queue.add(negatives.removeLast());
+        Collections.reverse(negatives);
+
+        Queue<Integer> result = new LinkedList<>();
+
+        int pi = 0;
+        int ni = 0;
+
+        while (pi < positives.size() || ni < negatives.size()) {
+            if (pi < positives.size()) result.add(positives.get(pi++));
+            if (ni < negatives.size()) result.add(negatives.get(ni++));
         }
+
+        queue.addAll(result);
     }
+
 
     public void rearrange(Queue<Integer> queue) {
-        java.util.ArrayDeque<Integer> odd = new java.util.ArrayDeque<>();
-        int size = queue.size();
+        Queue<Integer> odd = new LinkedList<>();
+        Queue<Integer> even = new LinkedList<>();
 
-        for (int i = 0; i < size; i++) {
+        while (!queue.isEmpty()) {
             int x = queue.remove();
-            if (x % 2 == 0) odd.add(x);
-            else queue.add(x);
+            if (x % 2 != 0) odd.add(x);
+            else even.add(x);
         }
 
-        while (!odd.isEmpty()) queue.add(odd.remove());
+        queue.addAll(odd);
+        queue.addAll(even);
     }
+
 
     public int maxLength(Set<String> set) {
         int max = 0;

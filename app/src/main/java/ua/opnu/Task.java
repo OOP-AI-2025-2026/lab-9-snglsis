@@ -11,7 +11,7 @@ public class Task {
     }
 
     public void removeShorterStrings(List<String> list) {
-        for (int i = 0; i < list.size() - 1; i += 2) {
+        for (int i = list.size() - 2; i >= 0; i -= 2) {
             String a = list.get(i);
             String b = list.get(i + 1);
             if (a.length() <= b.length()) {
@@ -77,31 +77,31 @@ public class Task {
     }
 
     public void reorder(Queue<Integer> queue) {
-        java.util.ArrayDeque<Integer> stack = new java.util.ArrayDeque<>();
+        java.util.ArrayDeque<Integer> negatives  = new java.util.ArrayDeque<>();
         int size = queue.size();
 
         for (int i = 0; i < size; i++) {
             int x = queue.remove();
-            if (x < 0) stack.push(x);
+            if (x < 0) negatives.push(x);
             else queue.add(x);
         }
 
-        while (!stack.isEmpty()) {
-            queue.add(stack.pop());
+        while (!negatives.isEmpty()) {
+            queue.add(negatives.removeLast());
         }
     }
 
     public void rearrange(Queue<Integer> queue) {
-        java.util.ArrayDeque<Integer> even = new java.util.ArrayDeque<>();
+        java.util.ArrayDeque<Integer> odd = new java.util.ArrayDeque<>();
         int size = queue.size();
 
         for (int i = 0; i < size; i++) {
             int x = queue.remove();
-            if (x % 2 == 0) even.add(x);
+            if (x % 2 == 0) odd.add(x);
             else queue.add(x);
         }
 
-        while (!even.isEmpty()) queue.add(even.remove());
+        while (!odd.isEmpty()) queue.add(odd.remove());
     }
 
     public int maxLength(Set<String> set) {

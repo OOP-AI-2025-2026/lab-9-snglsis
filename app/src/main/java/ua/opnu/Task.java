@@ -1,15 +1,7 @@
 package ua.opnu;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+
+import java.util.*;
 
 
 public class Task {
@@ -18,21 +10,27 @@ public class Task {
     }
 
     public void removeShorterStrings(List<String> list) {
-        for (int i = list.size() - 2; i >= 0; i -= 2) {
-            String a = list.get(i);
-            String b = list.get(i + 1);
+        ArrayList<Integer> toRemove = new ArrayList<>();
 
-            if (a.length() <= b.length()) {
-                list.remove(i);
+        for (int i = 0; i < list.size() - 1; i += 2) {
+            String first = list.get(i);
+            String second = list.get(i + 1);
+
+            if (first.length() <= second.length()) {
+                toRemove.add(i);
             } else {
-                list.remove(i + 1);
+                toRemove.add(i + 1);
             }
+        }
+        for (int i = toRemove.size() - 1; i >= 0; i--) {
+            list.remove((int) toRemove.get(i));
         }
     }
 
     public void stutter(List<String> list) {
         for (int i = 0; i < list.size(); i += 2) {
-            list.add(i + 1, list.get(i));
+            String value = list.get(i);
+            list.add(i + 1, value);
         }
     }
 
@@ -85,30 +83,31 @@ public class Task {
     }
 
     public void reorder(Queue<Integer> queue) {
-        List<Integer> list = new ArrayList<>();
-        while (!queue.isEmpty()) list.add(queue.remove());
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        int size = queue.size();
 
-        List<Integer> positives = new ArrayList<>();
-        List<Integer> negatives = new ArrayList<>();
-
-        for (int x : list) {
-            if (x < 0) negatives.add(x);
-            else positives.add(x);
+        if (size <= 1) {
+            return;
         }
 
-        Collections.reverse(negatives);
-
-        Queue<Integer> result = new LinkedList<>();
-
-        int pi = 0;
-        int ni = 0;
-
-        while (pi < positives.size() || ni < negatives.size()) {
-            if (pi < positives.size()) result.add(positives.get(pi++));
-            if (ni < negatives.size()) result.add(negatives.get(ni++));
+        for (int i = 0; i < size; i++) {
+            Integer x = queue.remove();
+            if (x < 0) {
+                stack.push(x);
+            } else {
+                queue.add(x);
+            }
         }
 
-        queue.addAll(result);
+        int positiveCount = queue.size();
+
+        while (!stack.isEmpty()) {
+            queue.add(stack.pop());
+        }
+
+        for (int i = 0; i < positiveCount; i++) {
+            queue.add(queue.remove());
+        }
     }
 
 
